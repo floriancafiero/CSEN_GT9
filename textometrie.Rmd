@@ -1,0 +1,143 @@
+# Bases de données par genre
+
+```{r bdd propres et découpage par genre}
+library(tm)            # Text mining cleaning
+library(stringr)       # Removing characters
+library(qdapRegex)     # Removing URLs 
+library(wordcloud2) 
+seconde_recodee <- read.csv("~/Desktop/RAPPORT CSEN/Data_SecondesG_clean.csv", header=TRUE)
+seconde_recodee_m <- seconde_recodee[which(seconde_recodee$Q2.Sexe == 1),]
+seconde_recodee_f <- seconde_recodee[which(seconde_recodee$Q2.Sexe == 0),]
+
+
+terminale_recodee <- read.csv("~/Desktop/RAPPORT CSEN/Data_TerminalesG_clean.csv", header=TRUE)
+terminale_recodee_m <- terminale_recodee[which(terminale_recodee$Q1.Sexe == 1),]
+terminale_recodee_f <- terminale_recodee[which(terminale_recodee$Q1.Sexe == 0),]
+```
+
+## Réponse questionnaires
+
+
+## Réponses métiers anticipés / rêvés
+
+### Metiers de rêve
+
+```{r metiers de rêve par genre}
+metiers_m_seconde <- table(seconde_recodee_m$FuturMetierRecode)
+View(metiers_m_seconde)
+metiers_f_seconde <- table(seconde_recodee_f$FuturMetierRecode)
+View(metiers_f_seconde)
+
+
+metiers_m_terminale <- table(terminale_recodee_m$FuturMetierRecode)
+View(metiers_m_terminale)
+metiers_f_terminale <- table(terminale_recodee_f$FuturMetierRecode)
+View(metiers_f_terminale)
+```
+
+### Metiers anticipés
+
+
+```{r metiers anticpé par genre}
+metiersant_m_seconde <- table(seconde_recodee_m$MetierReelRecode)
+View(metiersant_m_seconde)
+metiersant_f_seconde <- table(seconde_recodee_f$MetierReelRecode)
+View(metiersant_f_seconde)
+metiersant_m_terminale <- table(terminale_recodee_m$MetierReelRecode)
+View(metiersant_m_terminale)
+metiersant_f_terminale <- table(terminale_recodee_f$MetierReelRecode)
+View(metiersant_f_terminale)
+```
+
+### Métiers rêvés: préparation pour textométrie: secondes
+
+
+```{r textométrie seconde}
+seconde_aspirations_m <- paste(seconde_recodee_m$FuturMetierRecode)
+seconde_aspirations_m <- 
+  seconde_aspirations_m %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))                
+seconde_aspirations_f <- paste(seconde_recodee_f$FuturMetierRecode)
+seconde_aspirations_f <- 
+  seconde_aspirations_f %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))  
+seconde_anticipations_m <- paste(seconde_recodee_m$MetierReelRecode)
+seconde_anticipations_m <- 
+  seconde_anticipations_m %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))  
+seconde_anticipations_f <- paste(seconde_recodee_f$MetierReelRecode)
+seconde_anticipations_f <- 
+  seconde_anticipations_f %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))  
+write.table(seconde_aspirations_m, file = "seconde_aspirations_m.txt", sep = "\t",row.names = FALSE)
+write.table(seconde_aspirations_f, file = "seconde_aspirations_f.txt", sep = "\t",row.names = FALSE)
+write.table(seconde_anticipations_m, file = "seconde_anticipations_m.txt", sep = "\t",row.names = FALSE)
+write.table(seconde_anticipations_f, file = "seconde_anticipations_f.txt", sep = "\t",row.names = FALSE)
+```
+
+
+### Métiers rêvés: préparation pour textométrie: terminales
+
+
+```{r textométrie terminale}
+terminale_aspirations_m <- paste(terminale_recodee_m$FuturMetierRecode)
+terminale_aspirations_m <- 
+  terminale_aspirations_m %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))                
+terminale_aspirations_f <- paste(terminale_recodee_f$FuturMetierRecode)
+terminale_aspirations_f <- 
+  terminale_aspirations_f %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))  
+terminale_anticipations_m <- paste(terminale_recodee_m$MetierReelRecode)
+terminale_anticipations_m <- 
+  terminale_anticipations_m %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))  
+terminale_anticipations_f <- paste(terminale_recodee_f$MetierReelRecode)
+terminale_anticipations_f <- 
+  terminale_anticipations_f %>%
+  str_remove("\\n") %>%                   # remove linebreaks
+  removeWords(stopwords("french")) %>%   # Remove common words (a, the, it etc.)
+  removeWords(stopwords("english")) %>%
+  removeNumbers() %>%
+  stripWhitespace() %>%
+  removeWords(c("amp"))  
+write.table(terminale_aspirations_m, file = "terminale_aspirations_m.txt", sep = "\t",row.names = FALSE)
+write.table(terminale_aspirations_f, file = "terminale_aspirations_f.txt", sep = "\t",row.names = FALSE)
+write.table(terminale_anticipations_m, file = "terminale_anticipations_m.txt", sep = "\t",row.names = FALSE)
+write.table(terminale_anticipations_f, file = "terminale_anticipations_f.txt", sep = "\t",row.names = FALSE)
+```
